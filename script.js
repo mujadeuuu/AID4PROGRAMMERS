@@ -3,7 +3,7 @@ let uploadedImage = null;
 ‎let posts = [];   // from posts.json
 ‎let users = [];   // from users.json (ARRAY OF STRINGS)
 ‎
-‎const API = "";
+‎const API = "http://localhost:3000/";
 ‎
 ‎// PAGE LOAD
 ‎document.addEventListener("DOMContentLoaded", () => {
