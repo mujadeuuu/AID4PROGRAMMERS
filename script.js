@@ -12,7 +12,7 @@
 ‎      const name = nameInput.value.trim();
 ‎      if (!name) return alert("Enter a username");
 ‎      // redirect to timeline with username query
-‎      window.location.href = "tutorials.html?user=" + encodeURIComponent(name);
+‎      window.location.href = "timeline.html?user=" + encodeURIComponent(name);
 ‎    });
 ‎    return;
 ‎  }
@@ -49,7 +49,7 @@
 ‎// Load users from userst.json
 ‎async function loadUsers() {
 ‎  try {
-‎    const res = await fetch("user.json");
+‎    const res = await fetch("users.json");
 ‎    users = await res.json();
 ‎  } catch (err) {
 ‎    console.error("Failed to load users:", err);
