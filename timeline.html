@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Timeline</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container">
+    <h2 id="welcome"></h2>
+    <textarea id="postContent" placeholder="Post a question..."></textarea> 
+    <div class="area">
+      <label for="input-file" id="drop-area">
+        <input type="file" accept="image/*" id="input-file" hidden>
+        <div id="img-view">
+          <img src="drop.png">
+          <p> Upload an image that shows the problem</p>
+          <span>
+            Upload any image from desktop
+          </span> 
+        </div>
+      </label>
+    </div>
+    <button id="postBtn">Post</button>
+    
+
+    <h3>Timeline</h3>
+
+
+      <nav class="navbar">
+  <div class="nav-title">AID</div>
+  <ul class="nav-options">
+    <li class="home"><a href="index.html">Back</a></li>
+    <li>
+      <a id="profileLink" href="#"> 
+        <span id="navUsername">Profile</span>
+        <small id="navPost"></small>
+      </a>
+    </li> 
+    <li>  <input type="search" id="searchInput" placeholder="Search users or posts..."> </li>
+  </ul>
+</nav>
+
+<div id="timeline"> </div>
+                          
+
+       
+      <script src="script.js" defer></script>
+      
+</body>
+
+</html>

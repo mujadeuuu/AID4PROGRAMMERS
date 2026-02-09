@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Timeline</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container">
+    <h2 id="welcome"></h2>
+
+    <!-- Post input -->
+    <textarea id="postContent" placeholder="Write a post..."></textarea> 
+    <div class="area">
+      <label for="input-file" id="drop-area">
+        <input type="file" accept="image/*" id="input-file" hidden>
+        <div id="img-view">
+          <img src="drop.png">
+          <p>Click here to upload the interface of your website</p>
+          <span>Upload any image from desktop</span> 
+        </div>
+      </label>
+    </div>
+    <button id="postBtn">Post</button>
+
+    <h3>Posted Websites From Users</h3>
+    <div id="timeline"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="nav-title">AID</div>
+      <ul class="nav-options">
+        <li class="home"><a href="index.html">Back</a></li>
+        <li>
+          <a id="profileLink" href="#">
+            <span id="navUsername">Profile</span>
+            <small id="navPost"></small>
+          </a>
+        </li> 
+        <li>  <input type="search" id="searchInput" placeholder="Search users or posts..."> </li>
+      </ul>
+    </nav>
+  </div>
+
+  <script src="tutorials.js" defer></script>
+</body>
+</html>

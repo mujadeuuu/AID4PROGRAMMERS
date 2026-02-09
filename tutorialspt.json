@@ -1,0 +1,40 @@
+[
+ 
+  {
+     "username": "Jhela Mae Derigay",
+    "content": "THS-Annex Web-Based Automated Attendance System is a website designed to make attendance recording faster, easier, and more accurate. Instead of using manual attendance sheets, the system allows users to record attendance digitally through the website.",
+    "image": "jhela.jpg",
+    "comments": []
+  }, 
+
+   {
+    "username": "Lovely",
+    "content": "Enrollment form",
+    "image": "enroll.JPG",
+    "comments": [
+      "Nice post!",
+      "Welcome!"
+    ]
+  }, 
+
+  {
+    "username": "Ymir",
+    "content": "Check Out Website",
+    "image": "https://www.codewithfaraz.com/img/how%20to%20create%20a%20pure%20css%20responsive%20checkout%20form%20page%20in%20two%20minutes.jpg",
+    "comments": [
+      "Nice post!",
+      "Welcome!"
+    ]
+  }, 
+
+  {
+    "username": "Chiw",
+    "content": "Industrial web design",
+    "image": "https://www.codewithfaraz.com/img/industrial%20web%20design%20how%20to%20create%20a%20standout%20landing%20page%20with%20html%20and%20pure%20css.jpg",
+    "comments": [
+      "Nice post!",
+      "Welcome!"
+    ]
+  }
+
+]
