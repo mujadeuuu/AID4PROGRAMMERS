@@ -58,13 +58,13 @@ body {
   color: #b3abaf;
 }
 
-.navbar .button a {
+.navbar .buttons a {
   text-decoration: none;
   color: #fff;
   font-size: 17px;
 }
 
-.navbar .button .login {
+.navbar .buttons .login {
   font-size: 17px;
   font-weight: 500;
   border: 2px solid #fff;
@@ -74,7 +74,7 @@ body {
   transition: 0.5s;
 }
 
-.navbar .button .login:hover {
+.navbar .buttons .login:hover {
   background-color: #ec5aaf;
   color: #fff;
   border: 2px solid #ec5aaf;
@@ -145,8 +145,48 @@ body {
 .whole-sec .buttons .learn:hover {
   border: 2px solid #b4036a;
   background-color: #b4036a;
+} 
+
+#menu-toggle {
+  display: none;
 }
 
+#hamburger-btn {
+  font-size: 1.8rem;
+  color: #fff;
+  cursor: pointer;
+  display: none;
+  order: 1;
+}
+
+@media screen and (max-width: 1023px) {
+  body{
+    padding: 150px 0 100px 0;
+  }
+  .navbar .logo a {
+    font-size: 30px;
+  }
+
+  .links {
+    position: fixed;
+    left: -100%;
+    top: 75px;
+    width: 100%;
+    height: 100vh;
+    padding-top: 50px;
+    background: #175d69;
+    flex-direction: column;
+    transition: 0.3s ease;
+  }
+
+  .navbar #menu-toggle:checked ~ .links {
+    left: 0;
+  }
+
+  .navbar #hamburger-btn {
+    display: block;
+  }
+}
 @media screen and (max-width: 1023px) {
   body{
     padding: 150px 0 100px 0;
@@ -186,6 +226,7 @@ body {
     line-height: 26px;
     width: 100%;
   }
+
   .hero h2{
     font-size: 30px;
   }
