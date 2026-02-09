@@ -3,7 +3,7 @@ let uploadedImage = null;
 ‎let posts = [];   // from posts.json
 ‎let users = [];   // from users.json (ARRAY OF STRINGS)
 ‎
-‎const API = "https://mujadeuuu.github.io/AID4PROGRAMMERS/";
+‎const API = "";
 ‎
 ‎// PAGE LOAD
 ‎document.addEventListener("DOMContentLoaded", () => {
