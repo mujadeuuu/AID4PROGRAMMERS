@@ -31,8 +31,11 @@ async function initTimeline() {
   const params = new URLSearchParams(window.location.search);
   username = params.get("user") || "Guest";
 
+  console.log("Timeline username:", username); // Debug
+
+  // Update welcome message
   const welcomeEl = document.getElementById("welcome");
-  if (welcomeEl) welcomeEl.textContent = `Post Your Website`;
+  if (welcomeEl) welcomeEl.textContent = `Welcome, ${username}!`;
 
   const navUsername = document.getElementById("navUsername");
   if (navUsername) navUsername.textContent = username;
@@ -40,8 +43,10 @@ async function initTimeline() {
   setupImageUpload();
   setupPostButton();
 
+  // Load users and posts from server
   await Promise.all([loadUsers(), loadPosts()]);
 
+  // Setup search input
   const searchInput = document.getElementById("searchInput");
   if (searchInput) {
     searchInput.addEventListener("input", () => {
@@ -49,7 +54,11 @@ async function initTimeline() {
       renderPosts(query);
     });
   }
+
+  // Render all posts initially
+  renderPosts();
 }
+
 
 // Load users from userst.json
 async function loadUsers() {
@@ -138,43 +147,60 @@ function renderPosts(query = "") {
 
   timeline.innerHTML = "";
 
-  // filter posts by search query
-  const filteredPosts = posts.filter(post => {
-    const usernameMatch = post.username.toLowerCase().includes(query);
-    const contentMatch = (post.content || "").toLowerCase().includes(query);
-    return usernameMatch || contentMatch;
-  });
+  // Render all posts
+  posts.forEach((post, index) => {
+    const postUser = post.username || "Unknown";
+    const postContent = post.content || "";
+    const postImage = post.image || "";
+    const comments = post.comments || [];
 
-  // users without posts
-  const usersWithoutPosts = users
-    .filter(u => u.toLowerCase().includes(query))
-    .filter(u => !filteredPosts.some(p => p.username === u));
+    // Filter by search query (optional)
+    if (
+      query &&
+      !postUser.toLowerCase().includes(query) &&
+      !postContent.toLowerCase().includes(query)
+    ) return;
 
-  // render posts
-  filteredPosts.forEach((post, index) => {
     const div = document.createElement("div");
     div.className = "post";
-    const comments = post.comments || [];
+
     div.innerHTML = `
-      <strong>${post.username}</strong>
-      ${post.content ? `<p>${post.content}</p>` : ""}
-      ${post.image ? `<img src="${post.image}" style="max-width:100%; display:block;">` : ""}
+      <strong>${postUser}</strong>
+
+      ${postContent ? `<p>${postContent}</p>` : ""}
+
+      ${
+        postImage
+          ? `<img src="${postImage}" style="max-width:100%; display:block;">`
+          : ""
+      }
+
       <input type="text" id="comment-${index}" placeholder="Write a comment">
       <button onclick="addComment(${index})">Comment</button>
+
       <div class="comments">
         ${comments.map(c => `<div class="comment">💬 ${c}</div>`).join("")}
       </div>
+
       <hr>
     `;
+
     timeline.appendChild(div);
   });
 
-  // render users without posts
-  usersWithoutPosts.forEach(user => {
-    const div = document.createElement("div");
-    div.className = "post empty-post";
-    div.innerHTML = `<strong>${user}</strong> <p><em>No posts yet</em></p><hr>`;
-    timeline.appendChild(div);
+  // Render users with no posts
+  users.forEach(user => {
+    const hasPost = posts.some(p => p.username === user);
+    if (!hasPost && (!query || user.toLowerCase().includes(query))) {
+      const div = document.createElement("div");
+      div.className = "post empty-post";
+      div.innerHTML = `
+        <strong>${user}</strong>
+        <p><em>No posts yet</em></p>
+        <hr>
+      `;
+      timeline.appendChild(div);
+    }
   });
 }
 
@@ -187,4 +213,5 @@ function addComment(index) {
   renderPosts();
   input.value = "";
 }
+
 
