@@ -7,6 +7,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+
+const USERS_FILE = path.join(__dirname, "users.json");
+const POSTS_FILE = path.join(__dirname, "posts.json");
+
 const USERS_FILE = path.join(__dirname, "tutser.json");
 const POSTS_FILE = path.join(__dirname, "tutorialspt.json");
 
@@ -105,6 +109,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
 
 
 
