@@ -35,6 +35,14 @@
       "Nice post!",
       "Welcome!"
     ]
+  }, 
+
+ {
+    "username": "jade",
+    "content": "AID4PROG, A mini-social website",
+    "image": "aid.jpg",
+    "comments": []
   }
+
 
 ]
