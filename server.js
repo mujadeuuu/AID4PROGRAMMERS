@@ -5,7 +5,7 @@ const path = require("path");
 const API =
   location.hostname === "localhost"
     ? "http://localhost:3000"
-    : "https://YOUR-RENDER-URL.onrender.com";
+    : "https://aid4programmers.onrender.com";
 
 
 const app = express();
