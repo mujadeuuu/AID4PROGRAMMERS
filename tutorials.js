@@ -1,7 +1,12 @@
 let uploadedImage = null;
 let username = "";
 let posts = []; // loaded from poststut.json
-let users = []; // loaded from userst.json
+let users = []; // loaded from userst.json 
+
+const API =
+  location.hostname === "localhost"
+    ? "http://localhost:3000"
+    : "https://aid4programmers.onrender.com";
 
 // On page load
 document.addEventListener("DOMContentLoaded", () => {
@@ -182,3 +187,4 @@ function addComment(index) {
   renderPosts();
   input.value = "";
 }
+
