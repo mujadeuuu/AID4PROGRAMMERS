@@ -2,11 +2,6 @@ const express = require("express");
 const cors = require("cors");
 const fs = require("fs");
 const path = require("path"); 
-const API =
-  location.hostname === "localhost"
-    ? "http://localhost:3000"
-    : "https://aid4programmers.onrender.com";
-
 
 const app = express();
 app.use(cors());
@@ -105,7 +100,7 @@ app.post("/posts/comment", (req, res) => {
   res.json({ message: "Comment added" });
 });
 
-// ===== START SERVER (RENDER SAFE) =====
+// ===== START SERVER =====
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
