@@ -313,60 +313,135 @@ textarea {
   transition: border 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* === MOBILE VIEW FIXES === */
+/* ================= MOBILE INTERFACE (ADD ONLY) ================= */
 @media screen and (max-width: 768px) {
+
+  /* ---- BODY ---- */
   body {
-    padding: 20px 0; /* reduce top padding */
+    padding: 20px 0;
+    min-height: 100vh;
     background: linear-gradient(to bottom, #f187c9 23%, #cf0976 95%);
     display: flex;
     flex-direction: column;
     align-items: center;
   }
 
-  .container {
-    width: 90%;
-    padding: 20px;
+  /* ---- NAVBAR ---- */
+  .navbar {
+    height: auto;
+    padding: 12px 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
   }
 
-  .post, #timeline .post {
+  .nav-title {
+    font-size: 18px;
+  }
+
+  .nav-options {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .nav-options a {
+    font-size: 14px;
+    padding: 6px 10px;
+  }
+
+  /* ---- MAIN CONTAINER ---- */
+  .container {
+    margin-top: 120px;
+    width: 95%;
+    padding: 18px;
+    border-radius: 14px;
+  }
+
+  /* ---- POSTS / TIMELINE ---- */
+  #timeline {
+    margin-top: 12px;
+  }
+
+  .post,
+  #timeline .post {
     width: 100%;
     padding: 14px;
     margin-top: 14px;
-    border-radius: 8px;
+    border-radius: 14px;
+    border-left-width: 3px;
   }
 
+  .post strong {
+    font-size: 1rem;
+  }
+
+  .post p {
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+
+  /* ---- POST IMAGES ---- */
+  .post-image {
+    max-width: 100%;
+    max-height: 280px;
+    border-radius: 10px;
+  }
+
+  /* ---- COMMENTS ---- */
+  .comment {
+    font-size: 0.85rem;
+    padding: 6px 10px;
+  }
+
+  /* ---- COMMENT INPUT ROW ---- */
   #timeline input[type="text"] {
-    width: calc(100% - 90px); /* adjust input width */
+    width: calc(100% - 80px);
+    font-size: 14px;
+    padding: 8px;
   }
 
   #timeline button {
     width: 70px;
+    font-size: 13px;
     padding: 6px;
   }
 
-  .area, #drop-area, #img-view {
-    width: 90%;
+  /* ---- IMAGE UPLOAD AREA ---- */
+  .area {
+    width: 100%;
+  }
+
+  #drop-area {
+    width: 100%;
     height: auto;
-    padding: 20px;
+    padding: 18px;
+  }
+
+  #img-view {
+    min-height: 120px;
+    border-radius: 14px;
   }
 
   #img-view img {
-    width: 35px;
-    height: 35px;
+    width: 32px;
+    height: 32px;
   }
 
-  .post-image {
-    max-width: 100%;
-    max-height: 300px;
-  }
-
-  h1, h2, h3 {
-    font-size: 1.2rem;
-  }
-
+  /* ---- BUTTONS ---- */
   button {
     font-size: 1rem;
-    padding: 10px 0;
+    padding: 10px;
+    border-radius: 10px;
     margin: 10px 0;
   }
+
+  /* ---- HEADINGS ---- */
+  h1 { font-size: 1.4rem; }
+  h2 { font-size: 1.2rem; }
+  h3 { font-size: 1.05rem; }
 }
+
+
+
