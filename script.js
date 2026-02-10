@@ -98,16 +98,9 @@ function setupImageUpload() {
     const file = inputFile.files[0];
     if (!file) return;
 
-    // 🔒 IMAGE SIZE LIMIT (1MB)
-    if (file.size > 1_000_000) {
-      alert("Image too large! Max size is 1MB.");
-      inputFile.value = "";
-      return;
-    }
-
     const reader = new FileReader();
     reader.onload = () => {
-      uploadedImage = reader.result;
+      uploadedImage = reader.result; // Base64 string
       imgView.innerHTML = `
         <img src="${uploadedImage}" style="max-width:100%; display:block;">
       `;
@@ -173,30 +166,26 @@ function renderPosts(query = "") {
       query &&
       !postUser.toLowerCase().includes(query) &&
       !postContent.toLowerCase().includes(query)
-    ) return;
+    )
+      return;
 
     const div = document.createElement("div");
     div.className = "post";
 
     div.innerHTML = `
       <strong>${postUser}</strong>
-
       ${postContent ? `<p>${postContent}</p>` : ""}
-
       ${
         postImage
           ? `<img src="${postImage}" style="max-width:100%; display:block;"
                onerror="this.remove()">`
           : ""
       }
-
       <input type="text" id="comment-${index}" placeholder="Write a comment">
       <button onclick="addComment(${index})">Comment</button>
-
       <div class="comments">
         ${comments.map(c => `<div class="comment">💬 ${c}</div>`).join("")}
       </div>
-
       <hr>
     `;
 
