@@ -98,13 +98,6 @@ function setupImageUpload() {
     const file = inputFile.files[0];
     if (!file) return;
 
-    // 🔒 IMAGE SIZE LIMIT (1MB)
-    if (file.size > 1_000_000) {
-      alert("Image too large! Max size is 1MB.");
-      inputFile.value = "";
-      return;
-    }
-
     const reader = new FileReader();
     reader.onload = () => {
       uploadedImage = reader.result;
@@ -139,7 +132,6 @@ function addPost() {
       image: uploadedImage
     })
   })
-    .then(res => res.json())
     .then(() => loadPosts())
     .catch(err => console.error("Post failed:", err));
 
@@ -164,10 +156,10 @@ function renderPosts(query = "") {
   timeline.innerHTML = "";
 
   posts.forEach((post, index) => {
-    const postUser = post.username || "Unknown";
-    const postContent = post.content || "";
-    const postImage = post.image || "";
-    const comments = post.comments || [];
+    const postUser = post.username ?? "Unknown";
+    const postContent = post.content ?? "";
+    const postImage = post.image ?? "";
+    const comments = post.comments ?? [];
 
     if (
       query &&
@@ -185,8 +177,7 @@ function renderPosts(query = "") {
 
       ${
         postImage
-          ? `<img src="${postImage}" style="max-width:100%; display:block;"
-               onerror="this.remove()">`
+          ? `<img src="${postImage}" style="max-width:100%; display:block;">`
           : ""
       }
 
@@ -203,7 +194,7 @@ function renderPosts(query = "") {
     timeline.appendChild(div);
   });
 
-  // ===== USERS WITH NO POSTS =====
+  // USERS WITH NO POSTS
   users.forEach(user => {
     const hasPost = posts.some(p => p.username === user);
     if (!hasPost && (!query || user.toLowerCase().includes(query))) {
