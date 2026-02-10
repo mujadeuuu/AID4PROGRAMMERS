@@ -1,27 +1,29 @@
 const express = require("express");
 const cors = require("cors");
 const fs = require("fs");
-const path = require("path"); 
+const path = require("path");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
+// ===== JSON FILES =====
+// Main timeline
+const MAIN_USERS_FILE = path.join(__dirname, "users.json");
+const MAIN_POSTS_FILE = path.join(__dirname, "posts.json");
 
-const USERS_FILE = path.join(__dirname, "users.json");
-const POSTS_FILE = path.join(__dirname, "posts.json");
-
-const USERS_FILE = path.join(__dirname, "tutser.json");
-const POSTS_FILE = path.join(__dirname, "tutorialspt.json");
+// Tutorials timeline
+const TUT_USERS_FILE = path.join(__dirname, "tutser.json");
+const TUT_POSTS_FILE = path.join(__dirname, "tutorialspt.json");
 
 // ===== ENSURE FILES EXIST =====
-if (!fs.existsSync(USERS_FILE)) {
-  fs.writeFileSync(USERS_FILE, "[]");
-}
+[MAIN_USERS_FILE, TUT_USERS_FILE].forEach(file => {
+  if (!fs.existsSync(file)) fs.writeFileSync(file, "[]");
+});
 
-if (!fs.existsSync(POSTS_FILE)) {
-  fs.writeFileSync(POSTS_FILE, "[]");
-}
+[MAIN_POSTS_FILE, TUT_POSTS_FILE].forEach(file => {
+  if (!fs.existsSync(file)) fs.writeFileSync(file, "[]");
+});
 
 // ===== HELPER FUNCTIONS =====
 function readJSON(file) {
@@ -36,70 +38,112 @@ function writeJSON(file, data) {
   fs.writeFileSync(file, JSON.stringify(data, null, 2));
 }
 
-// ===== CREATE ACCOUNT =====
+// ===== ROUTES =====
+
+// ---- MAIN TIMELINE ----
+// Create user
 app.post("/users", (req, res) => {
   const { username } = req.body;
-  if (!username || !username.trim()) {
+  if (!username || !username.trim())
     return res.status(400).json({ message: "Username required" });
-  }
 
-  const users = readJSON(USERS_FILE);
-  if (users.includes(username)) {
+  const users = readJSON(MAIN_USERS_FILE);
+  if (users.includes(username))
     return res.status(400).json({ message: "User already exists" });
-  }
 
   users.push(username);
-  writeJSON(USERS_FILE, users);
-
+  writeJSON(MAIN_USERS_FILE, users);
   res.json({ message: "Account created", username });
 });
 
-// ===== GET ALL USERS =====
+// Get all users
 app.get("/users", (req, res) => {
-  res.json(readJSON(USERS_FILE));
+  res.json(readJSON(MAIN_USERS_FILE));
 });
 
-// ===== CREATE POST =====
+// Create post
 app.post("/posts", (req, res) => {
   const { username, content, image } = req.body;
-  if (!username) {
+  if (!username)
     return res.status(400).json({ message: "Username required" });
-  }
 
-  const posts = readJSON(POSTS_FILE);
-  const newPost = {
-    username,
-    content: content || "",
-    image: image || null,
-    comments: []
-  };
-
+  const posts = readJSON(MAIN_POSTS_FILE);
+  const newPost = { username, content: content || "", image: image || null, comments: [] };
   posts.unshift(newPost);
-  writeJSON(POSTS_FILE, posts);
+  writeJSON(MAIN_POSTS_FILE, posts);
 
   res.json(newPost);
 });
 
-// ===== GET ALL POSTS =====
+// Get all posts
 app.get("/posts", (req, res) => {
-  res.json(readJSON(POSTS_FILE));
+  res.json(readJSON(MAIN_POSTS_FILE));
 });
 
-// ===== ADD COMMENT =====
+// Add comment
 app.post("/posts/comment", (req, res) => {
   const { index, comment } = req.body;
-  const posts = readJSON(POSTS_FILE);
+  const posts = readJSON(MAIN_POSTS_FILE);
 
-  if (!posts[index]) {
-    return res.status(404).json({ message: "Post not found" });
-  }
-
-  if (!comment || !comment.trim()) {
-    return res.status(400).json({ message: "Comment required" });
-  }
+  if (!posts[index]) return res.status(404).json({ message: "Post not found" });
+  if (!comment || !comment.trim()) return res.status(400).json({ message: "Comment required" });
 
   posts[index].comments.push(comment);
-  writeJSON(POSTS_FILE, posts);
+  writeJSON(MAIN_POSTS_FILE, posts);
+
+  res.json({ message: "Comment added" });
+});
+
+// ---- TUTORIALS TIMELINE ----
+// Create tutorial user
+app.post("/tutorials/users", (req, res) => {
+  const { username } = req.body;
+  if (!username || !username.trim())
+    return res.status(400).json({ message: "Username required" });
+
+  const users = readJSON(TUT_USERS_FILE);
+  if (users.includes(username))
+    return res.status(400).json({ message: "User already exists" });
+
+  users.push(username);
+  writeJSON(TUT_USERS_FILE, users);
+  res.json({ message: "Tutorial user created", username });
+});
+
+// Get all tutorial users
+app.get("/tutorials/users", (req, res) => {
+  res.json(readJSON(TUT_USERS_FILE));
+});
+
+// Create tutorial post
+app.post("/tutorials/posts", (req, res) => {
+  const { username, content, image } = req.body;
+  if (!username)
+    return res.status(400).json({ message: "Username required" });
+
+  const posts = readJSON(TUT_POSTS_FILE);
+  const newPost = { username, content: content || "", image: image || null, comments: [] };
+  posts.unshift(newPost);
+  writeJSON(TUT_POSTS_FILE, posts);
+
+  res.json(newPost);
+});
+
+// Get all tutorial posts
+app.get("/tutorials/posts", (req, res) => {
+  res.json(readJSON(TUT_POSTS_FILE));
+});
+
+// Add comment to tutorial post
+app.post("/tutorials/posts/comment", (req, res) => {
+  const { index, comment } = req.body;
+  const posts = readJSON(TUT_POSTS_FILE);
+
+  if (!posts[index]) return res.status(404).json({ message: "Post not found" });
+  if (!comment || !comment.trim()) return res.status(400).json({ message: "Comment required" });
+
+  posts[index].comments.push(comment);
+  writeJSON(TUT_POSTS_FILE, posts);
 
   res.json({ message: "Comment added" });
 });
@@ -109,8 +153,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
-
-
-
-
