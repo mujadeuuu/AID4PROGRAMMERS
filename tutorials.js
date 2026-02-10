@@ -1,39 +1,52 @@
 let uploadedImage = null;
 let username = "";
-let posts = []; // loaded from poststut.json
-let users = []; // loaded from userst.json 
+let posts = []; // loaded from server
+let users = []; // loaded from server
 
 const API =
   location.hostname === "localhost"
     ? "http://localhost:3000"
     : "https://aid4programmers.onrender.com";
 
-// On page load
+// ================== PAGE LOAD ==================
 document.addEventListener("DOMContentLoaded", () => {
   const continueBtn = document.getElementById("continueBtn");
+
   if (continueBtn) {
     const nameInput = document.getElementById("username");
-    continueBtn.addEventListener("click", () => {
+
+    continueBtn.addEventListener("click", async () => {
       const name = nameInput.value.trim();
       if (!name) return alert("Enter a username");
-      // redirect to timeline with username query
+
+      try {
+        // Create user on server (tutorial timeline)
+        await fetch(`${API}/tutorials/users`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username: name })
+        });
+      } catch (err) {
+        console.error("User creation failed:", err);
+      }
+
+      // Redirect to timeline with username query
       window.location.href = "tutorials.html?user=" + encodeURIComponent(name);
     });
+
     return;
   }
 
-  // if no continue button -> timeline page
+  // If no continue button -> timeline page
   initTimeline();
 });
 
-// Timeline init
+// ================== INIT TIMELINE ==================
 async function initTimeline() {
   const params = new URLSearchParams(window.location.search);
   username = params.get("user") || "Guest";
 
-  console.log("Timeline username:", username); // Debug
-
-  // Update welcome message
+  // Update welcome
   const welcomeEl = document.getElementById("welcome");
   if (welcomeEl) welcomeEl.textContent = `Welcome, ${username}!`;
 
@@ -46,7 +59,7 @@ async function initTimeline() {
   // Load users and posts from server
   await Promise.all([loadUsers(), loadPosts()]);
 
-  // Setup search input
+  // Search filter
   const searchInput = document.getElementById("searchInput");
   if (searchInput) {
     searchInput.addEventListener("input", () => {
@@ -55,25 +68,23 @@ async function initTimeline() {
     });
   }
 
-  // Render all posts initially
   renderPosts();
 }
 
-
-// Load users from userst.json
+// ================== LOAD USERS ==================
 async function loadUsers() {
   try {
-    const res = await fetch("tutser.json");
+    const res = await fetch(`${API}/tutorials/users`);
     users = await res.json();
   } catch (err) {
     console.error("Failed to load users:", err);
   }
 }
 
-// Load posts from poststut.json
+// ================== LOAD POSTS ==================
 async function loadPosts() {
   try {
-    const res = await fetch("tutorialspt.json");
+    const res = await fetch(`${API}/tutorials/posts`);
     posts = await res.json();
     renderPosts();
   } catch (err) {
@@ -81,7 +92,7 @@ async function loadPosts() {
   }
 }
 
-// Image upload for posts
+// ================== IMAGE UPLOAD ==================
 function setupImageUpload() {
   const inputFile = document.getElementById("input-file");
   const imgView = document.getElementById("img-view");
@@ -102,31 +113,32 @@ function setupImageUpload() {
   });
 }
 
-// Post button
+// ================== POST BUTTON ==================
 function setupPostButton() {
   const postBtn = document.getElementById("postBtn");
   if (!postBtn) return;
 
-  postBtn.addEventListener("click", () => {
-    addPost();
-    renderPosts();
-  });
+  postBtn.addEventListener("click", addPost);
 }
 
-// Add new post (locally)
+// ================== ADD POST ==================
 function addPost() {
   const contentEl = document.getElementById("postContent");
   const content = contentEl.value.trim();
   if (!content && !uploadedImage) return;
 
-  const newPost = {
-    username,
-    content,
-    image: uploadedImage,
-    comments: []
-  };
+  fetch(`${API}/tutorials/posts`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username,
+      content,
+      image: uploadedImage
+    })
+  })
+    .then(() => loadPosts())
+    .catch(err => console.error("Post failed:", err));
 
-  posts.unshift(newPost); // add to posts array
   contentEl.value = "";
   uploadedImage = null;
 
@@ -140,21 +152,20 @@ function addPost() {
   }
 }
 
-// Render posts and users
+// ================== RENDER POSTS ==================
 function renderPosts(query = "") {
   const timeline = document.getElementById("timeline");
   if (!timeline) return;
 
   timeline.innerHTML = "";
 
-  // Render all posts
+  // Render posts
   posts.forEach((post, index) => {
     const postUser = post.username || "Unknown";
     const postContent = post.content || "";
     const postImage = post.image || "";
     const comments = post.comments || [];
 
-    // Filter by search query (optional)
     if (
       query &&
       !postUser.toLowerCase().includes(query) &&
@@ -204,14 +215,22 @@ function renderPosts(query = "") {
   });
 }
 
-// Add comment
+// ================== ADD COMMENT ==================
 function addComment(index) {
   const input = document.getElementById(`comment-${index}`);
   if (!input || !input.value.trim()) return;
 
-  posts[index].comments.push(input.value.trim());
-  renderPosts();
+  fetch(`${API}/tutorials/posts/comment`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      index,
+      comment: input.value.trim()
+    })
+  })
+    .then(() => loadPosts())
+    .catch(err => console.error("Comment failed:", err));
+
   input.value = "";
 }
-
 
