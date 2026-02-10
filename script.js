@@ -3,14 +3,11 @@ let username = "";
 let posts = [];
 let users = [];
 
-
+// ================= API =================
 const API =
   location.hostname === "localhost"
     ? "http://localhost:3000"
     : "https://aid4programmers.onrender.com";
-
-
-
 
 // ================= PAGE LOAD =================
 document.addEventListener("DOMContentLoaded", () => {
@@ -73,7 +70,6 @@ async function loadUsers() {
   try {
     const res = await fetch(`${API}/users`);
     users = await res.json();
-    console.log("Users:", users);
   } catch (err) {
     console.error("Failed to load users:", err);
   }
@@ -84,7 +80,6 @@ async function loadPosts() {
   try {
     const res = await fetch(`${API}/posts`);
     posts = await res.json();
-    console.log("Posts:", posts);
     renderPosts();
   } catch (err) {
     console.error("Failed to load posts:", err);
@@ -103,6 +98,13 @@ function setupImageUpload() {
     const file = inputFile.files[0];
     if (!file) return;
 
+    // 🔒 IMAGE SIZE LIMIT (1MB)
+    if (file.size > 1_000_000) {
+      alert("Image too large! Max size is 1MB.");
+      inputFile.value = "";
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = () => {
       uploadedImage = reader.result;
@@ -118,7 +120,6 @@ function setupImageUpload() {
 function setupPostButton() {
   const postBtn = document.getElementById("postBtn");
   if (!postBtn) return;
-
   postBtn.addEventListener("click", addPost);
 }
 
@@ -137,7 +138,10 @@ function addPost() {
       content,
       image: uploadedImage
     })
-  }).then(() => loadPosts());
+  })
+    .then(res => res.json())
+    .then(() => loadPosts())
+    .catch(err => console.error("Post failed:", err));
 
   contentEl.value = "";
   uploadedImage = null;
@@ -160,7 +164,7 @@ function renderPosts(query = "") {
   timeline.innerHTML = "";
 
   posts.forEach((post, index) => {
-    const postUser = post.username;
+    const postUser = post.username || "Unknown";
     const postContent = post.content || "";
     const postImage = post.image || "";
     const comments = post.comments || [];
@@ -179,7 +183,12 @@ function renderPosts(query = "") {
 
       ${postContent ? `<p>${postContent}</p>` : ""}
 
-      ${postImage ? `<img src="${postImage}" style="max-width:100%; display:block;">` : ""}
+      ${
+        postImage
+          ? `<img src="${postImage}" style="max-width:100%; display:block;"
+               onerror="this.remove()">`
+          : ""
+      }
 
       <input type="text" id="comment-${index}" placeholder="Write a comment">
       <button onclick="addComment(${index})">Comment</button>
@@ -222,7 +231,9 @@ function addComment(index) {
       index,
       comment: input.value.trim()
     })
-  }).then(() => loadPosts());
+  })
+    .then(() => loadPosts())
+    .catch(err => console.error("Comment failed:", err));
 
   input.value = "";
 }
