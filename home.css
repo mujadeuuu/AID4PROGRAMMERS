@@ -17,7 +17,7 @@ body {
 }
 
 .header {
-  background: #ee0a97;
+  background: #274beb;
   position: fixed;
   top: 0;
   left: 0;
@@ -80,9 +80,9 @@ body {
 }
 
 .navbar .buttons .login:hover {
-  background-color: #ec5aaf;
+  background-color: #274beb;
   color: #fff;
-  border: 2px solid #ec5aaf;
+  border: 2px solid #274beb;
 }
 
 .whole-sec {
@@ -130,8 +130,8 @@ body {
 .buttons .join {
   font-size: 17px;
   font-weight: 600;
-  border: 2px solid #b4036a;
-  background-color: #b4036a;
+  border: 2px solid #274beb;
+  background-color: #274beb;
 }
 
 .buttons .join:hover{
@@ -147,8 +147,8 @@ body {
 }
 
 .whole-sec .buttons .learn:hover {
-  border: 2px solid #b4036a;
-  background-color: #b4036a;
+  border: 2px solid #274beb;
+  background-color: #274beb;
 } 
 
 #menu-toggle {
@@ -177,7 +177,7 @@ body {
     width: 100%;
     height: 100vh;
     padding-top: 50px;
-    background: #e984b6;
+    background: #274beb;
     flex-direction: column;
     transition: 0.3s ease;
   }
@@ -209,6 +209,7 @@ body {
     width: 100%;
   }
 }
+
 
 
 
