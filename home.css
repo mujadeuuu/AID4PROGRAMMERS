@@ -166,8 +166,8 @@ body {
 /* ===== Mobile Styles ===== */
 @media screen and (max-width: 1023px) {
   body{
-    padding-top: 120px; /* offset for fixed header */
-    background: linear-gradient(to bottom, #f187c9 23%, #cf0976 95%); /* only body has gradient */
+   padding-top: 120px; 
+    background-image: (to bottom, 23%, 95%);
   }
 
   .links {
@@ -209,6 +209,7 @@ body {
     width: 100%;
   }
 }
+
 
 
 
