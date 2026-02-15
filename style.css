@@ -6,7 +6,7 @@
 }
 
 body {
-  background-image: url("blue.png"); 
+  background-image: url("back.png"); 
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -447,6 +447,7 @@ textarea {
   h2 { font-size: 1.2rem; }
   h3 { font-size: 1.05rem; }
 }
+
 
 
 
