@@ -72,7 +72,7 @@ textarea {
   left: 0;
   width: 100%;
   height: 60px;
-  background-color: #ee0a97;
+  background-color: #274beb;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -102,7 +102,7 @@ textarea {
 
 a:hover {
   border-radius: 3px;
-  background-color: #b43571;
+  background-color: #274beb;
   transform: scale(1.05);
   transition: transform 0.3s ease, background 0.3s ease;
 }
@@ -135,7 +135,7 @@ h3 { margin-top: 30px; font-size: 1.3rem; color: #4a4a4a; }
 button {
   width: 100%;
   padding: 12px 0;
-  background: #ec65a4;
+  background: #274beb;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -148,7 +148,7 @@ button {
 }
 
 button:hover {
-  background: #b6497c;
+  background: #041a7a;
   transform: scale(1.05);
 }
 
@@ -171,8 +171,8 @@ textarea {
 
 input:focus,
 textarea:focus {
-  border-color: #eb66c3;
-  box-shadow: 0 0 8px rgba(214, 125, 184, 0.87);
+  border-color: #274beb;
+  box-shadow: 0 0 8px #274beb;
 }
 
 textarea {
@@ -185,7 +185,7 @@ textarea {
   margin-top: 18px;
   padding: 18px;
   border-radius: 10px;
-  border-left: 4px solid #e466a1;
+  border-left: 4px solid #274beb;
   box-shadow: 0 4px 18px rgba(0,0,0,0.06);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -196,7 +196,7 @@ textarea {
 }
 
 .post strong {
-  color: #e25088;
+  color: #274beb;
   display: block;
   margin-bottom: 8px;
   font-size: 1.1rem;
@@ -305,7 +305,7 @@ textarea {
   margin-top: 18px;
   padding: 18px;
   border-radius: 10px;
-  border-left: 4px solid rgb(230, 96, 159);
+  border-left: 4px solid #274beb (230, 96, 159);
   box-shadow: 0 4px 18px rgba(0,0,0,0.06);
 }
 
@@ -325,7 +325,7 @@ textarea {
   body {
     padding: 20px 0;
     min-height: 100vh;
-    background: linear-gradient(to bottom, #f187c9 23%, #cf0976 95%);
+    background-image: (to bottom,  23%, 95%);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -447,6 +447,7 @@ textarea {
   h2 { font-size: 1.2rem; }
   h3 { font-size: 1.05rem; }
 }
+
 
 
 
