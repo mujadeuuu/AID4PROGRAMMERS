@@ -4,10 +4,7 @@ let posts = [];
 let users = [];
 
 // ================= API =================
-const API =
-  location.hostname === "localhost"
-    ? "http://localhost:3000"
-    : "https://aid4programmers.onrender.com";
+const API = "https://aid4programmers.onrender.com";
 
 // ================= PAGE LOAD =================
 document.addEventListener("DOMContentLoaded", () => {
