@@ -97,10 +97,9 @@ function setupImageUpload() {
 
     const reader = new FileReader();
     reader.onload = () => {
+      // Ensure Base64 includes MIME type
       uploadedImage = reader.result;
-      imgView.innerHTML = `
-        <img src="${uploadedImage}" style="max-width:100%; display:block;">
-      `;
+      imgView.innerHTML = `<img src="${uploadedImage}" style="max-width:100%; display:block;">`;
     };
     reader.readAsDataURL(file);
   });
@@ -132,8 +131,11 @@ function addPost() {
     .then(() => loadPosts())
     .catch(err => console.error("Post failed:", err));
 
+  // Reset form
   contentEl.value = "";
   uploadedImage = null;
+  const inputFile = document.getElementById("input-file");
+  if (inputFile) inputFile.value = ""; // reset file input
 
   const imgView = document.getElementById("img-view");
   if (imgView) {
@@ -225,3 +227,4 @@ function addComment(index) {
 
   input.value = "";
 }
+
