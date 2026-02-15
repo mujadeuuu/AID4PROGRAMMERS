@@ -166,6 +166,9 @@ function renderPosts(query = "") {
       !postContent.toLowerCase().includes(query)
     ) return;
 
+    // DEBUG: log image data
+    console.log("Post image:", postImage);
+
     const div = document.createElement("div");
     div.className = "post";
 
@@ -175,7 +178,7 @@ function renderPosts(query = "") {
       ${postContent ? `<p>${postContent}</p>` : ""}
 
       ${
-        postImage
+        postImage && postImage.startsWith("data:")
           ? `<img src="${postImage}" style="max-width:100%; display:block;">`
           : ""
       }
@@ -227,4 +230,3 @@ function addComment(index) {
 
   input.value = "";
 }
-
