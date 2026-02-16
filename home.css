@@ -210,6 +210,44 @@ body {
   }
 }
 
+.team {
+display: flex;
+lex-direction: column;
+gap: 25px;
+
+
+.member {
+  display: flex;
+ align-items: center;
+  gap: 15px; 
+   background: #f8f9fc;
+ padding: 15px;
+ border-radius: 12px;
+ transition: 0.3s ease;
+} 
+
+.member:hover {
+transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+
+.member img {
+  width: 70px;
+ height: 70px;
+border-radius: 50%;
+object-fit: cover;
+border: 3px solid #4e73df;
+} 
+
+.member h3 {
+  margin-bottom: 5px;
+    color: #4e73df;
+}
+
+.member p {
+ font-size: 14px;
+color: #555;
+} 
 
 
 
