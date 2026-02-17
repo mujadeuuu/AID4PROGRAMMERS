@@ -207,7 +207,34 @@ body {
     font-size: 16px;
     line-height: 26px;
     width: 100%;
+  }  
+  
+ .team {
+    gap: 15px; /* smaller gap for mobile */
   }
+
+  .member {
+    flex-direction: column; /* stack image + text vertically */
+    align-items: center;
+    text-align: center;
+    padding: 12px;
+  }
+
+  .member img {
+    width: 60px;  /* smaller for mobile */
+    height: 60px; /* smaller for mobile */
+    margin-bottom: 10px; /* spacing under image */
+    border-radius: 50%; /* keep circular frame */
+  }
+
+  .member h3 {
+    font-size: 16px;
+  }
+
+  .member p {
+    font-size: 13px;
+  } 
+  
 }
 
 .team {
@@ -248,6 +275,7 @@ border: 3px solid #4e73df;
  font-size: 14px;
 color: #555;
 } 
+
 
 
 
