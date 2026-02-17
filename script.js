@@ -1,16 +1,15 @@
+
 let uploadedImage = null;
 let username = "";
-let posts = [];
-let users = [];
+let posts = []; // loaded from server
+let users = []; // loaded from server
 
-// ================= API =================
 const API = "https://aid4programmers.onrender.com";
 
-// ================= PAGE LOAD =================
+// ================== PAGE LOAD ==================
 document.addEventListener("DOMContentLoaded", () => {
   const continueBtn = document.getElementById("continueBtn");
 
-  // ===== INDEX PAGE =====
   if (continueBtn) {
     const nameInput = document.getElementById("username");
 
@@ -19,7 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!name) return alert("Enter a username");
 
       try {
-        await fetch(`${API}/users`, {
+        // Create user on server (tutorial timeline)
+        await fetch(`${API}/tutorials/users`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username: name })
@@ -28,21 +28,23 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("User creation failed:", err);
       }
 
-      window.location.href =
-        "timeline.html?user=" + encodeURIComponent(name);
+      // Redirect to timeline with username query
+      window.location.href = "timeline.html?user=" + encodeURIComponent(name);
     });
 
     return;
   }
 
+  // If no continue button -> timeline page
   initTimeline();
 });
 
-// ================= INIT TIMELINE =================
+// ================== INIT TIMELINE ==================
 async function initTimeline() {
   const params = new URLSearchParams(window.location.search);
   username = params.get("user") || "Guest";
 
+  // Update welcome
   const welcomeEl = document.getElementById("welcome");
   if (welcomeEl) welcomeEl.textContent = `Welcome, ${username}!`;
 
@@ -52,30 +54,35 @@ async function initTimeline() {
   setupImageUpload();
   setupPostButton();
 
+  // Load users and posts from server
   await Promise.all([loadUsers(), loadPosts()]);
 
+  // Search filter
   const searchInput = document.getElementById("searchInput");
   if (searchInput) {
     searchInput.addEventListener("input", () => {
-      renderPosts(searchInput.value.toLowerCase());
+      const query = searchInput.value.toLowerCase();
+      renderPosts(query);
     });
   }
+
+  renderPosts();
 }
 
-// ================= LOAD USERS =================
+// ================== LOAD USERS ==================
 async function loadUsers() {
   try {
-    const res = await fetch(`${API}/users`);
+    const res = await fetch(`${API}/tutorials/users`);
     users = await res.json();
   } catch (err) {
     console.error("Failed to load users:", err);
   }
 }
 
-// ================= LOAD POSTS =================
+// ================== LOAD POSTS ==================
 async function loadPosts() {
   try {
-    const res = await fetch(`${API}/posts`);
+    const res = await fetch(`${API}/tutorials/posts`);
     posts = await res.json();
     renderPosts();
   } catch (err) {
@@ -83,7 +90,7 @@ async function loadPosts() {
   }
 }
 
-// ================= IMAGE UPLOAD =================
+// ================== IMAGE UPLOAD ==================
 function setupImageUpload() {
   const inputFile = document.getElementById("input-file");
   const imgView = document.getElementById("img-view");
@@ -97,7 +104,6 @@ function setupImageUpload() {
 
     const reader = new FileReader();
     reader.onload = () => {
-      // Ensure Base64 includes MIME type
       uploadedImage = reader.result;
       imgView.innerHTML = `<img src="${uploadedImage}" style="max-width:100%; display:block;">`;
     };
@@ -105,21 +111,21 @@ function setupImageUpload() {
   });
 }
 
-// ================= POST BUTTON =================
+// ================== POST BUTTON ==================
 function setupPostButton() {
   const postBtn = document.getElementById("postBtn");
   if (!postBtn) return;
+
   postBtn.addEventListener("click", addPost);
 }
 
-// ================= ADD POST =================
+// ================== ADD POST ==================
 function addPost() {
   const contentEl = document.getElementById("postContent");
   const content = contentEl.value.trim();
-
   if (!content && !uploadedImage) return;
 
-  fetch(`${API}/posts`, {
+  fetch(`${API}/tutorials/posts`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -131,11 +137,8 @@ function addPost() {
     .then(() => loadPosts())
     .catch(err => console.error("Post failed:", err));
 
-  // Reset form
   contentEl.value = "";
   uploadedImage = null;
-  const inputFile = document.getElementById("input-file");
-  if (inputFile) inputFile.value = ""; // reset file input
 
   const imgView = document.getElementById("img-view");
   if (imgView) {
@@ -147,27 +150,25 @@ function addPost() {
   }
 }
 
-// ================= RENDER POSTS =================
+// ================== RENDER POSTS ==================
 function renderPosts(query = "") {
   const timeline = document.getElementById("timeline");
   if (!timeline) return;
 
   timeline.innerHTML = "";
 
+  // Render posts
   posts.forEach((post, index) => {
-    const postUser = post.username ?? "Unknown";
-    const postContent = post.content ?? "";
-    const postImage = post.image ?? "";
-    const comments = post.comments ?? [];
+    const postUser = post.username || "Unknown";
+    const postContent = post.content || "";
+    const postImage = post.image || "";
+    const comments = post.comments || [];
 
     if (
       query &&
       !postUser.toLowerCase().includes(query) &&
       !postContent.toLowerCase().includes(query)
     ) return;
-
-    // DEBUG: log image data
-    console.log("Post image:", postImage);
 
     const div = document.createElement("div");
     div.className = "post";
@@ -178,7 +179,7 @@ function renderPosts(query = "") {
       ${postContent ? `<p>${postContent}</p>` : ""}
 
       ${
-        postImage && postImage.startsWith("data:")
+        postImage
           ? `<img src="${postImage}" style="max-width:100%; display:block;">`
           : ""
       }
@@ -196,7 +197,7 @@ function renderPosts(query = "") {
     timeline.appendChild(div);
   });
 
-  // USERS WITH NO POSTS
+  // Render users with no posts
   users.forEach(user => {
     const hasPost = posts.some(p => p.username === user);
     if (!hasPost && (!query || user.toLowerCase().includes(query))) {
@@ -212,12 +213,12 @@ function renderPosts(query = "") {
   });
 }
 
-// ================= ADD COMMENT =================
+// ================== ADD COMMENT ==================
 function addComment(index) {
   const input = document.getElementById(`comment-${index}`);
   if (!input || !input.value.trim()) return;
 
-  fetch(`${API}/posts/comment`, {
+  fetch(`${API}/tutorials/posts/comment`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -229,4 +230,6 @@ function addComment(index) {
     .catch(err => console.error("Comment failed:", err));
 
   input.value = "";
-} 
+}
+
+
