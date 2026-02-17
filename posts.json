@@ -1,11 +1,5 @@
 [
   {
-    "username": "michi",
-    "content": "An example of storing accounts on json file",
-    "image": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/…", 
-    "comments": []
-  },
-  {
     "username": "Alice",
     "content": "How to link css to html:",
     "image": "link.JPG",
