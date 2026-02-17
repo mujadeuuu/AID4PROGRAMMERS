@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       try {
         // Create user on server (tutorial timeline)
-        await fetch(`${API}/tutorials/users`, {
+        await fetch(`${API}/users`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username: name })
@@ -72,7 +72,7 @@ async function initTimeline() {
 // ================== LOAD USERS ==================
 async function loadUsers() {
   try {
-    const res = await fetch(`${API}/tutorials/users`);
+    const res = await fetch(`${API}/users`);
     users = await res.json();
   } catch (err) {
     console.error("Failed to load users:", err);
@@ -82,7 +82,7 @@ async function loadUsers() {
 // ================== LOAD POSTS ==================
 async function loadPosts() {
   try {
-    const res = await fetch(`${API}/tutorials/posts`);
+    const res = await fetch(`${API}/posts`);
     posts = await res.json();
     renderPosts();
   } catch (err) {
