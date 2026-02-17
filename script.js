@@ -19,16 +19,23 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!name) return alert("Enter a username");
 
       try {
-        await fetch(`${API}/users`, {
+        const res = await fetch(`${API}/users`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username: name })
         });
+
+        if (!res.ok) {
+          const data = await res.json();
+          return alert(data.message || "Failed to create user");
+        }
+
+        // Redirect only on successful user creation
+        window.location.href = "timeline.html?user=" + encodeURIComponent(name);
       } catch (err) {
         console.error("User creation failed:", err);
+        alert("Server error. Try again.");
       }
-
-      window.location.href = "timeline.html?user=" + encodeURIComponent(name);
     });
 
     return;
@@ -92,11 +99,13 @@ function setupImageUpload() {
     const reader = new FileReader();
     reader.onload = () => {
       let base64 = reader.result;
-      // Resize Base64 if too large (optional: keep first 1MB)
+
+      // Optional: truncate very large images to prevent timeline issues
       if (base64.length > 1000000) {
         base64 = base64.slice(0, 1000000);
         console.warn("Image truncated to prevent timeline break");
       }
+
       uploadedImage = base64;
       imgView.innerHTML = `<img src="${uploadedImage}" style="max-width:100%; display:block;">`;
     };
@@ -122,6 +131,10 @@ function addPost() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, content, image: uploadedImage })
   })
+    .then(res => {
+      if (!res.ok) throw new Error("Failed to add post");
+      return res.json();
+    })
     .then(() => loadPosts())
     .catch(err => console.error("Post failed:", err));
 
