@@ -125,7 +125,7 @@ function addPost() {
   const content = contentEl.value.trim();
   if (!content && !uploadedImage) return;
 
-  fetch(`${API}/tutorials/posts`, {
+  fetch(`${API}/posts`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
