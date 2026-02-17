@@ -5,14 +5,14 @@ const path = require("path");
 
 const app = express();
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: "10mb" })); // Allow large JSON for Base64 images
 
 // ===== JSON FILES =====
 // Main timeline
 const MAIN_USERS_FILE = path.join(__dirname, "users.json");
 const MAIN_POSTS_FILE = path.join(__dirname, "posts.json");
 
-// Tutorials timeline
+// Tutorials timeline (keep original names)
 const TUT_USERS_FILE = path.join(__dirname, "tutser.json");
 const TUT_POSTS_FILE = path.join(__dirname, "tutorialspt.json");
 
@@ -41,7 +41,6 @@ function writeJSON(file, data) {
 // ===== ROUTES =====
 
 // ---- MAIN TIMELINE ----
-// Create user
 app.post("/users", (req, res) => {
   const { username } = req.body;
   if (!username || !username.trim())
@@ -56,31 +55,27 @@ app.post("/users", (req, res) => {
   res.json({ message: "Account created", username });
 });
 
-// Get all users
 app.get("/users", (req, res) => {
   res.json(readJSON(MAIN_USERS_FILE));
 });
 
-// Create post
 app.post("/posts", (req, res) => {
-  const { username, content, image } = req.body;
+  const { username, content, imageBase64 } = req.body;
   if (!username)
     return res.status(400).json({ message: "Username required" });
 
   const posts = readJSON(MAIN_POSTS_FILE);
-  const newPost = { username, content: content || "", image: image || null, comments: [] };
+  const newPost = { username, content: content || "", image: imageBase64 || null, comments: [] };
   posts.unshift(newPost);
   writeJSON(MAIN_POSTS_FILE, posts);
 
   res.json(newPost);
 });
 
-// Get all posts
 app.get("/posts", (req, res) => {
   res.json(readJSON(MAIN_POSTS_FILE));
 });
 
-// Add comment
 app.post("/posts/comment", (req, res) => {
   const { index, comment } = req.body;
   const posts = readJSON(MAIN_POSTS_FILE);
@@ -95,7 +90,6 @@ app.post("/posts/comment", (req, res) => {
 });
 
 // ---- TUTORIALS TIMELINE ----
-// Create tutorial user
 app.post("/tutorials/users", (req, res) => {
   const { username } = req.body;
   if (!username || !username.trim())
@@ -110,31 +104,27 @@ app.post("/tutorials/users", (req, res) => {
   res.json({ message: "Tutorial user created", username });
 });
 
-// Get all tutorial users
 app.get("/tutorials/users", (req, res) => {
   res.json(readJSON(TUT_USERS_FILE));
 });
 
-// Create tutorial post
 app.post("/tutorials/posts", (req, res) => {
-  const { username, content, image } = req.body;
+  const { username, content, imageBase64 } = req.body;
   if (!username)
     return res.status(400).json({ message: "Username required" });
 
   const posts = readJSON(TUT_POSTS_FILE);
-  const newPost = { username, content: content || "", image: image || null, comments: [] };
+  const newPost = { username, content: content || "", image: imageBase64 || null, comments: [] };
   posts.unshift(newPost);
   writeJSON(TUT_POSTS_FILE, posts);
 
   res.json(newPost);
 });
 
-// Get all tutorial posts
 app.get("/tutorials/posts", (req, res) => {
   res.json(readJSON(TUT_POSTS_FILE));
 });
 
-// Add comment to tutorial post
 app.post("/tutorials/posts/comment", (req, res) => {
   const { index, comment } = req.body;
   const posts = readJSON(TUT_POSTS_FILE);
