@@ -120,35 +120,44 @@ function setupPostButton() {
 }
 
 // ================== ADD POST ==================
-function addPost() {
+async function addPost() {
   const contentEl = document.getElementById("postContent");
   const content = contentEl.value.trim();
+
   if (!content && !uploadedImage) return;
 
-  fetch(`${API}/posts`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      username,
-      content,
-      image: uploadedImage
-    })
-  })
-    .then(() => loadPosts())
-    .catch(err => console.error("Post failed:", err));
+  try {
+    const res = await fetch(`${API}/posts`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, content, image: uploadedImage })
+    });
 
-  contentEl.value = "";
-  uploadedImage = null;
+    if (!res.ok) throw new Error("Failed to add post");
 
-  const imgView = document.getElementById("img-view");
-  if (imgView) {
-    imgView.innerHTML = `
-      <img src="drop.png">
-      <p>Click here to upload an image</p>
-      <span>Upload any image from desktop</span>
-    `;
+    // Wait for JSON response to ensure image is stored
+    const newPost = await res.json();
+
+    // Update posts array and re-render
+    posts.unshift(newPost);
+    renderPosts();
+
+    // Reset input and image preview
+    contentEl.value = "";
+    uploadedImage = null;
+    const imgView = document.getElementById("img-view");
+    if (imgView) {
+      imgView.innerHTML = `
+        <img src="drop.png" style="max-width:100%; display:block;">
+        <p>Click here to upload an image</p>
+        <span>Upload any image from desktop</span>
+      `;
+    }
+  } catch (err) {
+    console.error("Post failed:", err);
   }
 }
+
 
 // ================== RENDER POSTS ==================
 function renderPosts(query = "") {
@@ -218,7 +227,7 @@ function addComment(index) {
   const input = document.getElementById(`comment-${index}`);
   if (!input || !input.value.trim()) return;
 
-  fetch(`${API}/tutorials/posts/comment`, {
+  fetch(`${API}/posts/comment`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
