@@ -105,7 +105,7 @@ function setupImageUpload() {
     const reader = new FileReader();
     reader.onload = () => {
       uploadedImage = reader.result;
-      imgView.innerHTML = `<img src="${uploadedImage}" style="max-width:100%; display:block;">`;
+      imgView.innerHTML = `<img src="${uploadedImage}" class="preview-image">`;
     };
     reader.readAsDataURL(file);
   });
@@ -187,11 +187,8 @@ function renderPosts(query = "") {
 
       ${postContent ? `<p>${postContent}</p>` : ""}
 
-      ${
-        postImage
-          ? `<img src="${postImage}" style="max-width:100%; display:block;">`
-          : ""
-      }
+     ${postImage ? `<img src="${postImage}" class="post-image">` : ""}
+
 
       <input type="text" id="comment-${index}" placeholder="Write a comment">
       <button onclick="addComment(${index})">Comment</button>
