@@ -28,8 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("User creation failed:", err);
       }
 
-      window.location.href =
-        "timeline.html?user=" + encodeURIComponent(name);
+      window.location.href = "timeline.html?user=" + encodeURIComponent(name);
     });
 
     return;
@@ -43,11 +42,8 @@ async function initTimeline() {
   const params = new URLSearchParams(window.location.search);
   username = params.get("user") || "Guest";
 
-  const welcomeEl = document.getElementById("welcome");
-  if (welcomeEl) welcomeEl.textContent = `Welcome, ${username}!`;
-
-  const navUsername = document.getElementById("navUsername");
-  if (navUsername) navUsername.textContent = username;
+  document.getElementById("welcome")?.textContent = `Welcome, ${username}!`;
+  document.getElementById("navUsername")?.textContent = username;
 
   setupImageUpload();
   setupPostButton();
@@ -55,11 +51,9 @@ async function initTimeline() {
   await Promise.all([loadUsers(), loadPosts()]);
 
   const searchInput = document.getElementById("searchInput");
-  if (searchInput) {
-    searchInput.addEventListener("input", () => {
-      renderPosts(searchInput.value.toLowerCase());
-    });
-  }
+  searchInput?.addEventListener("input", () => {
+    renderPosts(searchInput.value.toLowerCase());
+  });
 }
 
 // ================= LOAD USERS =================
@@ -97,8 +91,13 @@ function setupImageUpload() {
 
     const reader = new FileReader();
     reader.onload = () => {
-      // Ensure Base64 includes MIME type
-      uploadedImage = reader.result;
+      let base64 = reader.result;
+      // Resize Base64 if too large (optional: keep first 1MB)
+      if (base64.length > 1000000) {
+        base64 = base64.slice(0, 1000000);
+        console.warn("Image truncated to prevent timeline break");
+      }
+      uploadedImage = base64;
       imgView.innerHTML = `<img src="${uploadedImage}" style="max-width:100%; display:block;">`;
     };
     reader.readAsDataURL(file);
@@ -108,8 +107,7 @@ function setupImageUpload() {
 // ================= POST BUTTON =================
 function setupPostButton() {
   const postBtn = document.getElementById("postBtn");
-  if (!postBtn) return;
-  postBtn.addEventListener("click", addPost);
+  postBtn?.addEventListener("click", addPost);
 }
 
 // ================= ADD POST =================
@@ -122,25 +120,21 @@ function addPost() {
   fetch(`${API}/posts`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      username,
-      content,
-      image: uploadedImage
-    })
+    body: JSON.stringify({ username, content, image: uploadedImage })
   })
     .then(() => loadPosts())
     .catch(err => console.error("Post failed:", err));
 
-  // Reset form
+  // Reset input and image preview
   contentEl.value = "";
   uploadedImage = null;
   const inputFile = document.getElementById("input-file");
-  if (inputFile) inputFile.value = ""; // reset file input
+  if (inputFile) inputFile.value = "";
 
   const imgView = document.getElementById("img-view");
   if (imgView) {
     imgView.innerHTML = `
-      <img src="drop.png">
+      <img src="drop.png" style="max-width:100%; display:block;">
       <p>Click here to upload an image</p>
       <span>Upload any image from desktop</span>
     `;
@@ -164,42 +158,34 @@ function renderPosts(query = "") {
       query &&
       !postUser.toLowerCase().includes(query) &&
       !postContent.toLowerCase().includes(query)
-    ) return;
-
-    // DEBUG: log image data
-    console.log("Post image:", postImage);
+    )
+      return;
 
     const div = document.createElement("div");
     div.className = "post";
 
     div.innerHTML = `
       <strong>${postUser}</strong>
-
       ${postContent ? `<p>${postContent}</p>` : ""}
-
       ${
         postImage && postImage.startsWith("data:")
           ? `<img src="${postImage}" style="max-width:100%; display:block;">`
           : ""
       }
-
       <input type="text" id="comment-${index}" placeholder="Write a comment">
       <button onclick="addComment(${index})">Comment</button>
-
       <div class="comments">
         ${comments.map(c => `<div class="comment">💬 ${c}</div>`).join("")}
       </div>
-
       <hr>
     `;
 
     timeline.appendChild(div);
   });
 
-  // USERS WITH NO POSTS
+  // Show users with no posts
   users.forEach(user => {
-    const hasPost = posts.some(p => p.username === user);
-    if (!hasPost && (!query || user.toLowerCase().includes(query))) {
+    if (!posts.some(p => p.username === user) && (!query || user.toLowerCase().includes(query))) {
       const div = document.createElement("div");
       div.className = "post empty-post";
       div.innerHTML = `
@@ -220,10 +206,7 @@ function addComment(index) {
   fetch(`${API}/posts/comment`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      index,
-      comment: input.value.trim()
-    })
+    body: JSON.stringify({ index, comment: input.value.trim() })
   })
     .then(() => loadPosts())
     .catch(err => console.error("Comment failed:", err));
