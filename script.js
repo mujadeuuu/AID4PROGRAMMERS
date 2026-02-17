@@ -96,8 +96,6 @@ function setupImageUpload() {
   const imgView = document.getElementById("img-view");
   if (!inputFile || !imgView) return;
 
-  imgView.addEventListener("click", () => inputFile.click());
-
   inputFile.addEventListener("change", () => {
     const file = inputFile.files[0];
     if (!file) return;
@@ -110,6 +108,7 @@ function setupImageUpload() {
     reader.readAsDataURL(file);
   });
 }
+
 
 // ================== POST BUTTON ==================
 function setupPostButton() {
