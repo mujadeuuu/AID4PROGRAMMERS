@@ -25,13 +25,15 @@ document.addEventListener("DOMContentLoaded", () => {
           body: JSON.stringify({ username: name })
         });
 
+        const data = await res.json();
+
         if (!res.ok) {
-          const data = await res.json();
           return alert(data.message || "Failed to create user");
         }
 
-        // Redirect only on successful user creation
-        window.location.href = "timeline.html?user=" + encodeURIComponent(name);
+        // ✅ Redirect only on successful user creation
+        window.location.assign("timeline.html?user=" + encodeURIComponent(name));
+
       } catch (err) {
         console.error("User creation failed:", err);
         alert("Server error. Try again.");
