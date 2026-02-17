@@ -8,19 +8,19 @@
   {
     "username": "Alice",
     "content": "How to link css to html:",
-    "image": "/images/link.JPG",
+    "image": "link.JPG",
     "comments": []
   },
   {
     "username": "Bob",
     "content": "How to link Javascript on html:",
-    "image": "/images/script.JPG",
+    "image": "script.JPG",
     "comments": []
   },
   {
     "username": "Charlie",
     "content": "how to import a font on html? copy the URL from google then call it inside url on import attribute.",
-    "image": "/images/import.JPG",
+    "image": "import.JPG",
     "comments": [
       "Awesome!",
       "Great shot!"
