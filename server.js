@@ -59,13 +59,14 @@ app.get("/users", (req, res) => {
   res.json(readJSON(MAIN_USERS_FILE));
 });
 
+// ---- FIXED POST ROUTE (accept 'image' instead of imageBase64) ----
 app.post("/posts", (req, res) => {
-  const { username, content, imageBase64 } = req.body;
+  const { username, content, image } = req.body; // <-- changed here
   if (!username)
     return res.status(400).json({ message: "Username required" });
 
   const posts = readJSON(MAIN_POSTS_FILE);
-  const newPost = { username, content: content || "", image: imageBase64 || null, comments: [] };
+  const newPost = { username, content: content || "", image: image || null, comments: [] }; // <-- changed here
   posts.unshift(newPost);
   writeJSON(MAIN_POSTS_FILE, posts);
 
@@ -108,13 +109,14 @@ app.get("/tutorials/users", (req, res) => {
   res.json(readJSON(TUT_USERS_FILE));
 });
 
+// ---- FIXED TUTORIAL POSTS ROUTE ----
 app.post("/tutorials/posts", (req, res) => {
-  const { username, content, imageBase64 } = req.body;
+  const { username, content, image } = req.body; // <-- changed here
   if (!username)
     return res.status(400).json({ message: "Username required" });
 
   const posts = readJSON(TUT_POSTS_FILE);
-  const newPost = { username, content: content || "", image: imageBase64 || null, comments: [] };
+  const newPost = { username, content: content || "", image: image || null, comments: [] }; // <-- changed here
   posts.unshift(newPost);
   writeJSON(TUT_POSTS_FILE, posts);
 
